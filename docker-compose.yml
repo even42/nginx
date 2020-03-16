@@ -1,0 +1,10 @@
+version: '3'
+services:
+  nginx_vts:
+    build: .
+    container_name: nginx_vts
+    #command: ["nginx"]
+    ports:
+      - "8282:80"
+    environment:
+      - NGINX_HOST=localhost
