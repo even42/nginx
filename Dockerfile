@@ -130,21 +130,24 @@ RUN cd /tmp && wget http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz && tar
 && rm -rf /tmp/*
 
 RUN mkdir -p /etc/nginx/sites-enabled
+RUN mkdir -p /etc/nginx/snippets
 RUN mkdir -p /etc/nginx/conf.d
 RUN mkdir -p /var/cache/nginx
 RUN mkdir -p /var/www/html
 
-RUN adduser -H -D www-data
-RUN addgroup www-data www-data
+RUN addgroup -g 82  -S www-data && \
+    adduser -u 82 -H -D -S www-data -G www-data
+#RUN adduser -H -D www-data
+#RUN addgroup www-data www-data
 
 ADD nginx.conf /etc/nginx/
-#ADD default.conf /etc/nginx/sites-enabled/
 ADD metrics.conf /etc/nginx/sites-enabled/
+ADD kiwol.conf /etc/nginx/sites-enabled/
+ADD cors.conf /etc/nginx/snippets/
 
 WORKDIR /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
-EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
 
